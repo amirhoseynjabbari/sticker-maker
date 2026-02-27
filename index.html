@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استیکر ساز ایتا | ساخت استیکر</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Vazir', 'Tahoma', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 50%, #f97316 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* کانتینر اصلی */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* تب‌ها - فقط استیکر ساز فعال */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tab {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: none;
+            color: #333;
+        }
+        
+        .tab.active {
+            background: #f97316;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.4);
+        }
+        
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        /* محتوای تب‌ها */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* ========== استایل‌های استیکر ساز ========== */
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(249, 115, 22, 0.3);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #fed7aa;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff7ed;
+            margin-bottom: 20px;
+        }
+        
+        .upload-area:hover {
+            border-color: #f97316;
+            background: #ffedd5;
+        }
+        
+        .upload-area i {
+            font-size: 50px;
+            color: #f97316;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .upload-area p {
+            color: #4a5568;
+            font-size: 16px;
+        }
+        
+        .upload-area .small {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 10px;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .preview-section {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .preview-title {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .image-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .original-image, .sticker-image {
+            flex: 1;
+            text-align: center;
+            background: #fff7ed;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .original-image img, .sticker-image img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            margin-top: 10px;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        
+        .sticker-image img {
+            background: repeating-conic-gradient(#fed7aa 0% 25%, #ffedd5 0% 50%) 50% / 20px 20px;
+            padding: 10px;
+        }
+        
+        .label {
+            color: #4a5568;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .file-info {
+            background: #fff7ed;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #4a5568;
+            border: 1px solid #fed7aa;
+        }
+        
+        .file-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .file-info-label {
+            font-weight: bold;
+            color: #f97316;
+        }
+        
+        .options {
+            background: #fff7ed;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .option-item {
+            margin-bottom: 15px;
+        }
+        
+        .option-item label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: 500;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #fed7aa;
+            border-radius: 5px;
+            font-family: inherit;
+            accent-color: #f97316;
+        }
+        
+        .btn {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #ea580c;
+        }
+        
+        .btn:disabled {
+            background: #fed7aa;
+            cursor: not-allowed;
+        }
+        
+        .download-section {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .download-btn {
+            background: #f97316;
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #fff7ed;
+            border-top: 4px solid #f97316;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f97316;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(249, 115, 22, 0.3);
+            z-index: 1000;
+        }
+        
+        .notification.error {
+            background: #ef4444;
+        }
+        
+        /* ========== استایل‌های فروشگاه - کامنت شده ========== */
+        /*
+        .shop-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(249, 115, 22, 0.3);
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .shop-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .shop-header h2 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .shop-header h2 span {
+            color: #f97316;
+        }
+        
+        .shop-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .category-btn {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #4a5568;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .category-btn:hover {
+            background: #ffedd5;
+            transform: translateY(-2px);
+        }
+        
+        .category-btn.active {
+            background: #f97316;
+            color: white;
+            border-color: #f97316;
+        }
+        
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .package-card {
+            background: #fff7ed;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #fed7aa;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(249, 115, 22, 0.2);
+        }
+        
+        .package-header {
+            background: #f97316;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .package-header h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .package-badge {
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+        }
+        
+        .package-body {
+            padding: 20px;
+        }
+        
+        .package-preview {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .preview-text {
+            background: #fff7ed;
+            color: #f97316;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid #fed7aa;
+        }
+        
+        .package-info {
+            margin-bottom: 15px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        
+        .info-label {
+            font-weight: bold;
+        }
+        
+        .info-value {
+            color: #f97316;
+            font-weight: bold;
+        }
+        
+        .package-price {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #f97316;
+        }
+        
+        .package-price small {
+            font-size: 14px;
+            color: #718096;
+            font-weight: normal;
+        }
+        
+        .btn-buy {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .btn-buy:hover {
+            background: #ea580c;
+        }
+        
+        .btn-preview {
+            background: transparent;
+            color: #f97316;
+            border: 1px solid #f97316;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        .btn-preview:hover {
+            background: #fff7ed;
+        }
+        
+        .vip-section {
+            background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+            border-radius: 15px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .vip-section h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .vip-section p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .vip-price {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .btn-vip {
+            background: white;
+            color: #f97316;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-vip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        */
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* ========== استایل گالری پیش‌نمایش ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.95);
+            overflow: auto;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: transparent;
+            margin: 30px auto;
+            padding: 20px;
+            width: 95%;
+            max-width: 900px;
+            border-radius: 20px;
+        }
+
+        .close-modal {
+            position: absolute;
+            left: 20px;
+            top: -10px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+            width: 45px;
+            height: 45px;
+            background: rgba(249, 115, 22, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .close-modal:hover {
+            background: #f97316;
+            transform: scale(1.1);
+        }
+
+        .gallery-title {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .gallery-title span {
+            color: #f97316;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 50px;
+        }
+
+        .sticker-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            padding: 10px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            border-color: #f97316;
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.4);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+            background: repeating-conic-gradient(#fed7aa 0% 25%, #ffedd5 0% 50%) 50% / 20px 20px;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(249, 115, 22, 0.8);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+
+        .preview-protection {
+            user-select: none;
+            -webkit-user-drag: none;
+            -webkit-touch-callout: none;
+        }
+
+        .no-click {
+            pointer-events: none;
+        }
+
+        /* اسکرول بار سفارشی */
+        .sticker-gallery::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .sticker-gallery::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .sticker-gallery::-webkit-scrollbar-thumb {
+            background: #f97316;
+            border-radius: 10px;
+        }
+
+        .sticker-gallery::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .image-container {
+                flex-direction: column;
+            }
+            
+            .sticker-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 10px;
+            }
+        }
+    </style>
+    <!-- فونت وزیر از CDN -->
+    <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+    
+    <!-- مودال گالری پیش‌نمایش -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closePreviewModal()">&times;</span>
+            <div class="gallery-title">
+                <span id="modal-package-name">گالری استیکرها</span>
+            </div>
+            <div class="sticker-gallery" id="stickerGallery" oncontextmenu="return false;">
+                <!-- استیکرها با جاوااسکریپت اضافه می‌شن -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <!-- تب‌ها - فقط استیکر ساز فعال -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('maker')">🎨 استیکر ساز</button>
+            <!-- دکمه فروشگاه کامنت شده
+            <button class="tab" onclick="showTab('shop')">🛍️ فروشگاه پکیج</button>
+            -->
+        </div>
+        
+        <!-- ========== تب استیکر ساز ========== -->
+        <div id="maker" class="tab-content active">
+            <div class="container">
+                <h1>🎨 استیکر ساز ایتا</h1>
+                <p class="subtitle">عکس خود را آپلود کنید تا به استیکر WEBP تبدیل شود</p>
+                
+                <!-- بخش آپلود -->
+                <div class="upload-area" id="upload-area">
+                    <i>📁</i>
+                    <p>برای آپلود عکس کلیک کنید</p>
+                    <p class="small">فرمت‌های مجاز: JPG، PNG (حداکثر حجم ۵ مگابایت)</p>
+                </div>
+                <input type="file" id="file-input" accept="image/*">
+                
+                <!-- بخش پیش‌نمایش -->
+                <div class="preview-section" id="preview-section">
+                    <h3 class="preview-title">پیش‌نمایش</h3>
+                    <div class="image-container">
+                        <div class="original-image">
+                            <div class="label">عکس اصلی</div>
+                            <img id="original-img" src="#" alt="عکس اصلی" draggable="false" oncontextmenu="return false;">
+                        </div>
+                        <div class="sticker-image">
+                            <div class="label">استیکر نهایی</div>
+                            <img id="sticker-img" src="#" alt="استیکر" draggable="false" oncontextmenu="return false;">
+                        </div>
+                    </div>
+                    
+                    <!-- اطلاعات فایل -->
+                    <div class="file-info" id="file-info" style="display: none;">
+                        <div class="file-info-row">
+                            <span class="file-info-label">ابعاد اصلی:</span>
+                            <span id="original-dimensions">-</span>
+                        </div>
+                        <div class="file-info-row">
+                            <span class="file-info-label">فرمت:</span>
+                            <span id="original-format">-</span>
+                        </div>
+                        <div class="file-info-row">
+                            <span class="file-info-label">حجم:</span>
+                            <span id="original-size">-</span>
+                        </div>
+                        <div class="file-info-row">
+                            <span class="file-info-label">پس‌زمینه:</span>
+                            <span id="background-status">-</span>
+                        </div>
+                    </div>
+                    
+                    <!-- گزینه‌های ویرایش -->
+                    <div class="options">
+                        <div class="option-item">
+                            <label>کیفیت تصویر: <span id="quality-value">۹۰</span>%</label>
+                            <input type="range" id="image-quality" min="50" max="100" value="90" step="5">
+                        </div>
+                        <div class="info-text">کیفیت بالاتر = حجم بیشتر</div>
+                    </div>
+                    
+                    <!-- دکمه تبدیل -->
+                    <button class="btn" id="convert-btn">تبدیل به استیکر</button>
+                </div>
+                
+                <!-- بخش بارگذاری -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>در حال پردازش عکس...</p>
+                </div>
+                
+                <!-- بخش دانلود -->
+                <div class="download-section" id="download-section">
+                    <button class="btn download-btn" id="download-btn">📥 دانلود استیکر (WEBP)</button>
+                    <p class="small">فایل آماده است. می‌توانید مستقیماً در ایتا ارسال کنید</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ========== تب فروشگاه پکیج - کامنت شده ========== -->
+        <!--
+        <div id="shop" class="tab-content">
+            <div class="shop-container">
+                <div class="shop-header">
+                    <h2>🛍️ <span>فروشگاه</span> پکیج‌های استیکر متنی</h2>
+                    <p>بیش از ۴۵۰ استیکر متنی آماده برای ایتا</p>
+                </div>
+                
+                <div class="categories">
+                    <button class="category-btn active" onclick="filterPackages('all')">همه پکیج‌ها</button>
+                    <button class="category-btn" onclick="filterPackages('religious')">مذهبی</button>
+                    <button class="category-btn" onclick="filterPackages('birthday')">تولد</button>
+                    <button class="category-btn" onclick="filterPackages('condolence')">تسلیت</button>
+                    <button class="category-btn" onclick="filterPackages('morning')">صبح بخیر</button>
+                    <button class="category-btn" onclick="filterPackages('night')">شب بخیر</button>
+                    <button class="category-btn" onclick="filterPackages('funny')">طنز</button>
+                    <button class="category-btn" onclick="filterPackages('daily')">📅 روزمره</button>
+                </div>
+                
+                <div class="packages-grid" id="packages-grid"></div>
+                
+                <div class="vip-section">
+                    <h3>✨ اشتراک VIP ✨</h3>
+                    <p>دسترسی نامحدود به تمام پکیج‌ها + استیکرهای جدید ماهانه</p>
+                    <div class="vip-price">
+                        ۱۰۰,۰۰۰ <small style="color:white">تومان / ماهانه</small>
+                    </div>
+                    <button class="btn-vip" onclick="buyVIP()">خرید اشتراک VIP</button>
+                </div>
+            </div>
+        </div>
+        -->
+        
+        <!-- فوتر -->
+        <div class="footer">
+            <p>نسخه ۳.۰ | استیکر ساز ایتا | ساخته شده با ❤️ برای کاربران ایتا</p>
+        </div>
+    </div>
+    
+    <script>
+        // ========== توابع عمومی ==========
+        function showTab(tabId) {
+            // مخفی کردن همه تب‌ها
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tabBtn => {
+                tabBtn.classList.remove('active');
+            });
+            
+            // نمایش تب انتخاب شده
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification';
+            if (type === 'error') {
+                notification.classList.add('error');
+            }
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        // ========== توابع گالری پیش‌نمایش ==========
+        function openPreviewModal(packageName, stickerCount, packageFolder) {
+            document.getElementById('modal-package-name').textContent = packageName + ' - ' + stickerCount + ' استیکر';
+            
+            const gallery = document.getElementById('stickerGallery');
+            gallery.innerHTML = '';
+            
+            // ایجاد استیکرهای پیش‌نمایش
+            for (let i = 1; i <= Math.min(stickerCount, 50); i++) {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                
+                // آدرس استیکر - اینجا باید مسیر درست رو بذاری
+                const stickerNumber = i.toString().padStart(2, '0');
+                const imgSrc = `/packages/${packageFolder}/sticker-rozmare${stickerNumber}.webp`;
+                
+                item.innerHTML = `
+                    <img src="${imgSrc}" 
+                         alt="استیکر ${i}" 
+                         draggable="false" 
+                         oncontextmenu="return false;"
+                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2ZmZTJjMSIvPjx0ZXh0IHg9IjUwIiB5PSI1MCIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0iI2Y5NzMxNiI+8J+UqDwvdGV4dD48L3N2Zz4='">
+                    <span class="watermark">استیکر ساز ایتا</span>
+                `;
+                
+                gallery.appendChild(item);
+            }
+            
+            document.getElementById('previewModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closePreviewModal() {
+            document.getElementById('previewModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // بستن مودال با کلیک بیرون
+        window.onclick = function(event) {
+            const modal = document.getElementById('previewModal');
+            if (event.target == modal) {
+                closePreviewModal();
+            }
+        }
+        
+        // جلوگیری از راست کلیک در کل صفحه
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // جلوگیری از درگ کردن تصاویر
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // ========== کدهای استیکر ساز ==========
+        (function() {
+            const uploadArea = document.getElementById('upload-area');
+            const fileInput = document.getElementById('file-input');
+            const previewSection = document.getElementById('preview-section');
+            const originalImg = document.getElementById('original-img');
+            const stickerImg = document.getElementById('sticker-img');
+            const convertBtn = document.getElementById('convert-btn');
+            const loading = document.getElementById('loading');
+            const downloadSection = document.getElementById('download-section');
+            const downloadBtn = document.getElementById('download-btn');
+            const imageQuality = document.getElementById('image-quality');
+            const qualityValue = document.getElementById('quality-value');
+            const fileInfo = document.getElementById('file-info');
+            const originalDimensions = document.getElementById('original-dimensions');
+            const originalFormat = document.getElementById('original-format');
+            const originalSize = document.getElementById('original-size');
+            const backgroundStatus = document.getElementById('background-status');
+            
+            let currentFile = null;
+            let originalImageWidth = 0;
+            let originalImageHeight = 0;
+            let hasTransparency = false;
+            let convertedStickerBlob = null;
+            
+            imageQuality.addEventListener('input', () => {
+                qualityValue.textContent = imageQuality.value;
+            });
+            
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    showNotification('حجم فایل نباید بیشتر از ۵ مگابایت باشد', 'error');
+                    return;
+                }
+                
+                const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    showNotification('فرمت فایل باید JPG یا PNG باشد', 'error');
+                    return;
+                }
+                
+                currentFile = file;
+                
+                const fileSizeInKB = (file.size / 1024).toFixed(2);
+                originalSize.textContent = fileSizeInKB + ' KB';
+                
+                let format = file.type.split('/')[1].toUpperCase();
+                if (format === 'JPEG') format = 'JPG';
+                originalFormat.textContent = format;
+                
+                hasTransparency = (file.type === 'image/png');
+                backgroundStatus.textContent = hasTransparency ? 'شفاف ✅' : 'دارای پس‌زمینه';
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        originalImageWidth = img.width;
+                        originalImageHeight = img.height;
+                        originalDimensions.textContent = img.width + ' × ' + img.height + ' پیکسل';
+                        
+                        originalImg.src = e.target.result;
+                        stickerImg.src = e.target.result;
+                        previewSection.style.display = 'block';
+                        fileInfo.style.display = 'block';
+                        downloadSection.style.display = 'none';
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            convertBtn.addEventListener('click', async () => {
+                if (!currentFile) {
+                    showNotification('لطفاً ابتدا یک عکس انتخاب کنید', 'error');
+                    return;
+                }
+                
+                loading.style.display = 'block';
+                convertBtn.disabled = true;
+                downloadSection.style.display = 'none';
+                
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    
+                    img.onload = () => {
+                        canvas.width = originalImageWidth;
+                        canvas.height = originalImageHeight;
+                        
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0, originalImageWidth, originalImageHeight);
+                        
+                        const quality = parseInt(imageQuality.value) / 100;
+                        
+                        canvas.toBlob((blob) => {
+                            convertedStickerBlob = blob;
+                            const url = URL.createObjectURL(blob);
+                            stickerImg.src = url;
+                            
+                            loading.style.display = 'none';
+                            convertBtn.disabled = false;
+                            downloadSection.style.display = 'block';
+                            
+                            let message = 'استیکر با موفقیت ساخته شد!';
+                            if (hasTransparency) {
+                                message = 'استیکر با پس‌زمینه شفاف ساخته شد!';
+                            }
+                            showNotification(message);
+                        }, 'image/webp', quality);
+                    };
+                    
+                    img.src = originalImg.src;
+                    
+                } catch (error) {
+                    loading.style.display = 'none';
+                    convertBtn.disabled = false;
+                    showNotification('خطا در پردازش عکس', 'error');
+                    console.error(error);
+                }
+            });
+            
+            downloadBtn.addEventListener('click', () => {
+                if (convertedStickerBlob) {
+                    const url = URL.createObjectURL(convertedStickerBlob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'sticker.webp';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            });
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#f97316';
+                uploadArea.style.background = '#ffedd5';
+            });
+            
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#fed7aa';
+                uploadArea.style.background = '#fff7ed';
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#fed7aa';
+                uploadArea.style.background = '#fff7ed';
+                
+                const file = e.dataTransfer.files[0];
+                if (file) {
+                    fileInput.files = e.dataTransfer.files;
+                    const event = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(event);
+                }
+            });
+        })();
+        
+        // ========== کدهای فروشگاه - کامنت شده ==========
+        /*
+        const packages = [
+            { id: 1, name: 'رمضان ۱۴۰۴', category: 'religious', count: 30, price: 35000, icon: '🌙', folder: 'ramadan', preview: ['رمضان کریم', 'افطارنا', 'التماس دعا', 'سحری', 'یا علی'] },
+            { id: 2, name: 'محرم ۱۴۰۴', category: 'religious', count: 25, price: 35000, icon: '🕋', folder: 'moharram', preview: ['یا حسین', 'یا زهرا', 'روضه', 'سینه‌زنی', 'فاطمیه'] },
+            { id: 3, name: 'دعا و مناجات', category: 'religious', count: 40, price: 45000, icon: '🤲', folder: 'dua', preview: ['اللهم عجل', 'صلوات', 'استغفرالله', 'یا مهدی', 'یا صاحب'] },
+            { id: 4, name: 'مناسبت‌های مذهبی', category: 'religious', count: 35, price: 40000, icon: '🕋', folder: 'religious-occasions', preview: ['عید فطر', 'عید قربان', 'عید غدیر', 'نیمه شعبان', 'مبعث'] },
+            { id: 5, name: 'تبریک تولد', category: 'birthday', count: 40, price: 45000, icon: '🎂', folder: 'birthday', preview: ['تولدت مبارک', 'سالروز تولد', 'صد سال زنده باشی', 'خدا بهت عمر بده', 'روزت پر از شادی'] },
+            { id: 6, name: 'تولد ویژه', category: 'birthday', count: 25, price: 30000, icon: '🎈', folder: 'special-birthday', preview: ['تولدت مبارک عزیزم', 'مامان', 'بابا', 'داداش', 'خواهر'] },
+            { id: 7, name: 'جشن تولد', category: 'birthday', count: 30, price: 35000, icon: '🎉', folder: 'birthday-party', preview: ['هپی بیلد دی', 'کیک تولد', 'جوون بمونی', 'همیشه شاد', '۱۸ سالگی'] },
+            { id: 8, name: 'تسلیت', category: 'condolence', count: 20, price: 25000, icon: '🕊️', folder: 'condolence', preview: ['انا لله', 'تسلیت میگم', 'خدا رحمتش کنه', 'روحش شاد', 'فاتحه'] },
+            { id: 9, name: 'دعا برای رفتگان', category: 'condolence', count: 15, price: 20000, icon: '🤲', folder: 'prayer', preview: ['غریق رحمت', 'شادی روح', 'یادش گرامی', 'آمرزیده', 'بهشت جایگاهت'] },
+            { id: 10, name: 'تسلیت ویژه', category: 'condolence', count: 25, price: 30000, icon: '💔', folder: 'special-condolence', preview: ['صبر جمیل', 'جاش خالی', 'دلم براش تنگ', 'همسفر نور', 'قرص فاتحه'] },
+            { id: 11, name: 'صبح بخیر', category: 'morning', count: 30, price: 30000, icon: '☀️', folder: 'morning', preview: ['صبح بخیر', 'روز خوبی داشته باشی', 'صبح قشنگ', 'خورشید برات', 'روزتو با انرژی'] },
+            { id: 12, name: 'صبح دلنشین', category: 'morning', count: 25, price: 30000, icon: '🌅', folder: 'nice-morning', preview: ['صبح بخیر گل', 'بیدار شو', 'چای صبحونه', 'روز قشنگیه', 'یه روز تازه'] },
+            { id: 13, name: 'انرژی صبح', category: 'morning', count: 20, price: 25000, icon: '⚡', folder: 'morning-energy', preview: ['پر انرژی', 'موفق باشی', 'امروز روز توئه', 'بهترین‌ها', 'صبح بخیر رفیق'] },
+            { id: 14, name: 'شب بخیر', category: 'night', count: 30, price: 30000, icon: '🌙', folder: 'night', preview: ['شب بخیر', 'خواب راحت', 'رویاهای شیرین', 'خستگی‌هات در بره', 'فردا روز بهتریه'] },
+            { id: 15, name: 'شب آرام', category: 'night', count: 25, price: 30000, icon: '✨', folder: 'calm-night', preview: ['شب آروم', 'ماه و ستاره', 'خدا نگهدار', 'فرشته‌ها', 'تا فردا'] },
+            { id: 16, name: 'خواب خوش', category: 'night', count: 20, price: 25000, icon: '😴', folder: 'sweet-dreams', preview: ['خواب راحت', 'استراحت کن', 'زود بخواب', 'فردا صبح', 'خوابای قشنگ'] },
+            { id: 17, name: 'طنز و خنده', category: 'funny', count: 50, price: 50000, icon: '😂', folder: 'funny', preview: ['مردم از خنده', 'چه سمیه', 'دمت گرم', 'فدات شم', 'خنده‌دار بود'] },
+            { id: 18, name: 'میم‌های اینترنتی', category: 'funny', count: 40, price: 45000, icon: '🤣', folder: 'memes', preview: ['شدی', 'حال کردم', 'بمیرم برات', 'چاکریم', 'قربونت برم'] },
+            { id: 19, name: 'جوک و بامزه', category: 'funny', count: 35, price: 40000, icon: '😁', folder: 'jokes', preview: ['خنده‌م گرفت', 'دیگه بسه', 'مرسی حال کردم', 'سمی بود', 'خوش می‌گذره'] },
+            { id: 20, name: 'طنز روزمره', category: 'funny', count: 30, price: 35000, icon: '😆', folder: 'daily-humor', preview: ['داری می‌خندی', 'منم میخوام', 'بیا اینجا', 'چته', 'چه خبره'] },
+            { id: 21, name: 'روزمره', category: 'daily', count: 50, price: 35000, icon: '📅', folder: 'rozmare', preview: ['صبح بخیر', 'شب بخیر', 'چطوری؟', 'خوبی؟', 'خداحافظ'] }
+        ];
+        
+        function renderPackages(category = 'all') {
+            const grid = document.getElementById('packages-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            const filteredPackages = category === 'all' ? packages : packages.filter(p => p.category === category);
+            
+            filteredPackages.forEach(pkg => {
+                const card = document.createElement('div');
+                card.className = 'package-card';
+                card.innerHTML = `
+                    <div class="package-header">
+                        <h3>${pkg.icon} ${pkg.name}</h3>
+                        <span class="package-badge">${pkg.count} عدد</span>
+                    </div>
+                    <div class="package-body">
+                        <div class="package-preview">
+                            ${pkg.preview.map(text => `<span class="preview-text">${text}</span>`).join('')}
+                        </div>
+                        <div class="package-info">
+                            <div class="info-row">
+                                <span class="info-label">📦 تعداد:</span>
+                                <span class="info-value">${pkg.count} استیکر</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">📱 فرمت:</span>
+                                <span class="info-value">WEBP</span>
+                            </div>
+                        </div>
+                        <div class="package-price">
+                            ${pkg.price.toLocaleString()} <small>تومان</small>
+                        </div>
+                        <button class="btn-buy" onclick="buyPackage(${pkg.id})">خرید پکیج</button>
+                        <button class="btn-preview" onclick="previewPackage(${pkg.id})">پیش‌نمایش</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function filterPackages(category) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderPackages(category);
+        }
+        
+        function buyPackage(id) {
+            const pkg = packages.find(p => p.id === id);
+            showNotification(`پکیج "${pkg.name}" به سبد خرید اضافه شد`, 'success');
+        }
+        
+        function buyVIP() {
+            showNotification('اشتراک VIP به سبد خرید اضافه شد', 'success');
+        }
+        
+        function previewPackage(id) {
+            const pkg = packages.find(p => p.id === id);
+            openPreviewModal(pkg.name, pkg.count, pkg.folder);
+        }
+        
+        // بارگذاری اولیه پکیج‌ها (اگه صفحه فروشگاه فعال بود)
+        if (document.getElementById('packages-grid')) {
+            renderPackages('all');
+        }
+        */
+    </script>
+</body>
+</html>
